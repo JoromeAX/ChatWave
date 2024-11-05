@@ -8,11 +8,11 @@
 import Foundation
 
 struct Chat: Identifiable, Codable {
-    let id: String // Уникальный идентификатор чата
-    let name: String // Название чата
-    let participants: [String] // Список ID пользователей
-    let isGroup: Bool // Указывает, является ли чат групповым
-    var lastMessage: String? // Последнее сообщение (опционально)
-    var timestampLastMessage: Date? // Дата и время последнего сообщения (опционально)
+    let id: String
+    let name: String
+    let participants: [String]
+    let isGroup: Bool
+    var lastMessage: String?
+    var timestampLastMessage: Date?
     var deletedBy: [String?]
 }

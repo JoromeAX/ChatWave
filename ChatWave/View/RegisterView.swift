@@ -11,13 +11,13 @@ struct RegisterView: View {
     @State private var email = ""
     @State private var password = ""
     @State private var name = ""
-    @State private var goToLogin = false // Для переключения на экран входа
-    @State private var goToChatList = false // Для переключения на экран чатов
+    @State private var goToLogin = false
+    @State private var goToChatList = false
     @ObservedObject var authViewModel: AuthViewModel
     @ObservedObject var chatViewModel: ChatViewModel
     @ObservedObject var userViewModel: UserViewModel
     @ObservedObject var messageViewModel: MessageViewModel
-
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -30,13 +30,11 @@ struct RegisterView: View {
                     }
                     Button("Register") {
                         authViewModel.register(email: email, password: password, name: name) {
-                            // Вызываем этот замыкание после успешной регистрации
                             goToChatList = true
                         }
                     }
                 }
                 
-                // Кнопка для перехода на экран входа
                 Button(action: {
                     goToLogin = true
                 }) {

@@ -13,10 +13,9 @@ class MessageViewModel: ObservableObject {
     
     private let db = Firestore.firestore()
     
-    // Функция для получения сообщений
     func fetchMessages(for chatId: String) {
         Firestore.firestore().collection("chats").document(chatId).collection("messages")
-            .order(by: "timestamp", descending: false) // сортировка по времени
+            .order(by: "timestamp", descending: false)
             .addSnapshotListener { snapshot, error in
                 if let error = error {
                     print("Error fetching messages: \(error)")
@@ -27,11 +26,10 @@ class MessageViewModel: ObservableObject {
                     try? doc.data(as: Message.self)
                 } ?? []
                 
-                print("Fetched messages: \(self.messages)") // Лог для проверки результатов
+                print("Fetched messages: \(self.messages)")
             }
     }
     
-    // Функция для отправки сообщения
     func sendMessage(_ message: Message) {
         do {
             try db.collection("chats").document(message.chatId)
@@ -43,7 +41,6 @@ class MessageViewModel: ObservableObject {
         }
     }
     
-    // Функция для обновления статуса прочтения сообщения
     func markMessageAsRead(_ messageId: String, in chatId: String) {
         db.collection("chats").document(chatId)
             .collection("messages")
@@ -52,7 +49,6 @@ class MessageViewModel: ObservableObject {
                 if let error = error {
                     print("Error updating message read status: \(error)")
                 } else {
-                    // Обновляем локальный массив сообщений
                     if let index = self.messages.firstIndex(where: { $0.id == messageId }) {
                         self.messages[index].readStatus = true
                     }
@@ -60,13 +56,11 @@ class MessageViewModel: ObservableObject {
             }
     }
     
-    // Функция для удаления сообщения
     func deleteMessage(_ messageId: String, in chatId: String) {
         db.collection("chats").document(chatId).collection("messages").document(messageId).delete { error in
             if let error = error {
                 print("Error deleting message: \(error)")
             } else {
-                // Обновляем локальный массив сообщений
                 self.messages.removeAll { $0.id == messageId }
             }
         }

@@ -19,7 +19,7 @@ struct NewChatView: View {
         self.userViewModel = userViewModel
         self.chatViewModel = chatViewModel
         self.authViewModel = authViewModel
-        self.userViewModel.authViewModel = authViewModel // Передаем authViewModel в userViewModel
+        self.userViewModel.authViewModel = authViewModel
     }
     
     var body: some View {
@@ -30,12 +30,10 @@ struct NewChatView: View {
                 }
                 
                 Section(header: Text("Select Participants")) {
-                    // Поле поиска
                     TextField("Search by name", text: $userViewModel.searchText)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.vertical, 5)
                     
-                    // Список отфильтрованных пользователей
                     List(userViewModel.filteredUsers) { user in
                         MultipleSelectionRow(title: user.name, isSelected: selectedParticipants.contains(user.id)) {
                             if selectedParticipants.contains(user.id) {
@@ -52,7 +50,6 @@ struct NewChatView: View {
                 guard let currentUserID = authViewModel.user?.id else { return }
                 
                 let chatId = UUID().uuidString
-                // Добавляем текущего пользователя в список участников
                 let participants = selectedParticipants + [currentUserID]
                 
                 let newChat = Chat(
@@ -88,7 +85,7 @@ struct MultipleSelectionRow: View {
                 Image(systemName: "checkmark")
             }
         }
-        .contentShape(Rectangle()) // Для лучшего взаимодействия
+        .contentShape(Rectangle())
         .onTapGesture {
             action()
         }

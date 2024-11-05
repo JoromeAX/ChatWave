@@ -21,11 +21,9 @@ class ChatViewModel: ObservableObject {
                     print("Error fetching chats: \(error)")
                     return
                 }
-                // Фильтруем чаты, чтобы исключить те, которые пользователь удалил
                 self.chats = snapshot?.documents.compactMap { doc in
                     let chat = try? doc.data(as: Chat.self)
                     
-                    // Проверяем, что ID пользователя отсутствует в поле deletedBy
                     if let safeChat = chat, !(safeChat.deletedBy.contains { $0 == userId }) {
                         return safeChat
                     } else {
@@ -33,7 +31,7 @@ class ChatViewModel: ObservableObject {
                     }
                 } ?? []
                 
-                print("Fetched chats: \(self.chats)") // Лог для проверки результатов
+                print("Fetched chats: \(self.chats)")
             }
     }
     
@@ -54,7 +52,6 @@ class ChatViewModel: ObservableObject {
         
         let chatRef = Firestore.firestore().collection("chats").document(chatId)
         
-        // Добавляем ID пользователя в deletedBy
         chatRef.updateData([
             "deletedBy": FieldValue.arrayUnion([userId])
         ]) { error in
@@ -63,7 +60,6 @@ class ChatViewModel: ObservableObject {
                 return
             }
             
-            // Проверяем, удалили ли все пользователи чат
             chatRef.getDocument { document, error in
                 if let document = document, document.exists {
                     let data = document.data()
@@ -73,10 +69,8 @@ class ChatViewModel: ObservableObject {
                     let remainingParticipants = participants.count - deletedBy.count
                     
                     if remainingParticipants == 0 {
-                        // Удаляем чат, если все участники его удалили
                         self.deleteChatAndMessages(chatId: chatId)
                     } else {
-                        // Отправляем сообщение о выходе, если остались участники
                         let exitMessageId = UUID().uuidString
                         let exitMessage = Message(
                             id: exitMessageId,
@@ -91,7 +85,7 @@ class ChatViewModel: ObservableObject {
                     }
                 }
                 
-                completion?() // Вызываем completion после завершения работы
+                completion?()
             }
         }
     }
@@ -99,7 +93,6 @@ class ChatViewModel: ObservableObject {
     func sendMessage(_ message: Message) {
         let chatRef = Firestore.firestore().collection("chats").document(message.chatId)
         
-        // Сохранение сообщения в Firestore
         chatRef.collection("messages").document(message.id).setData([
             "id": message.id,
             "chatId": message.chatId,

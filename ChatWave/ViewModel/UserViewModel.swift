@@ -9,16 +9,15 @@ import Foundation
 import FirebaseFirestore
 
 class UserViewModel: ObservableObject {
-    @Published var users: Set<User> = [] // Используем Set для уникальных пользователей
+    @Published var users: Set<User> = []
     @Published var searchText = ""
     
     private let db = Firestore.firestore()
     
-    var authViewModel: AuthViewModel? // Ссылка на AuthViewModel
+    var authViewModel: AuthViewModel?
     
     var filteredUsers: [User] {
         let filtered = users.filter { user in
-            // Исключаем текущего пользователя
             guard let currentUserID = authViewModel?.user?.id else { return true }
             return user.name.contains(searchText) && user.id != currentUserID
         }
@@ -32,15 +31,14 @@ class UserViewModel: ObservableObject {
                 return
             }
             
-            // Загружаем пользователей и добавляем в Set
             if let documents = snapshot?.documents {
                 for document in documents {
                     if let user = try? document.data(as: User.self) {
-                        self.users.insert(user) // Используем insert для добавления в Set
+                        self.users.insert(user)
                     }
                 }
             }
-            print("Fetched users:", self.users.map { $0.name }) // Лог для проверки пользователей
+            print("Fetched users:", self.users.map { $0.name })
         }
     }
 }

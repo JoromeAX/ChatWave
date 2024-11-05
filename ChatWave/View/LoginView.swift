@@ -10,8 +10,8 @@ import SwiftUI
 struct LoginView: View {
     @State private var email = ""
     @State private var password = ""
-    @State private var goToRegister = false // Для переключения на экран регистрации
-    @State private var goToChatList = false // Для переключения на экран чатов
+    @State private var goToRegister = false
+    @State private var goToChatList = false
     @ObservedObject var authViewModel: AuthViewModel
     @ObservedObject var chatViewModel: ChatViewModel
     @ObservedObject var userViewModel: UserViewModel
@@ -28,13 +28,11 @@ struct LoginView: View {
                     }
                     Button("Login") {
                         authViewModel.login(email: email, password: password) {
-                            // Вызываем этот замыкание после успешного входа
                             goToChatList = true
                         }
                     }
                 }
 
-                // Кнопка для перехода на экран регистрации
                 Button(action: {
                     goToRegister = true
                 }) {

@@ -37,7 +37,7 @@ struct ChatDetailView: View {
                     Text("Send")
                 }
                 .padding()
-                .disabled(newMessageText.isEmpty) // Отключить кнопку, если текстовое поле пустое
+                .disabled(newMessageText.isEmpty)
             }
         }
         .navigationTitle("Chat")
@@ -75,7 +75,7 @@ struct ChatDetailView: View {
             id: messageId,
             chatId: chatId,
             senderId: user.id,
-            senderName: user.name, // Используйте имя текущего пользователя
+            senderName: user.name,
             text: newMessageText,
             timestamp: Date(),
             readStatus: false

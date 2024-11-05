@@ -51,7 +51,7 @@ struct ChatListView: View {
             }
             .onAppear {
                 if let currentUserID = Auth.auth().currentUser?.uid {
-                    print("Current user ID: \(currentUserID)") // Лог для проверки
+                    print("Current user ID: \(currentUserID)")
                     chatViewModel.fetchChats(for: currentUserID)
                 } else {
                     print("No user is currently signed in.")

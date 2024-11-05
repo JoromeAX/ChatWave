@@ -35,7 +35,7 @@ struct MessageRowView: View {
                 }
             } else {
                 VStack(alignment: .leading) {
-                    Text(message.senderName) // Отображение имени отправителя
+                    Text(message.senderName)
                         .font(.subheadline)
                         .foregroundColor(.gray)
                         .padding(.leading, 10)

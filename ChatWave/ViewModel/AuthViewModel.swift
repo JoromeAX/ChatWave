@@ -11,12 +11,11 @@ import FirebaseFirestore
 
 class AuthViewModel: ObservableObject {
     @Published var user: User?
-    @Published var isLoggedIn = false // Отслеживает состояние авторизации
+    @Published var isLoggedIn = false
     private let db = Firestore.firestore()
     private var authListener: AuthStateDidChangeListenerHandle?
     
     init() {
-        // Устанавливаем слушателя на изменения состояния аутентификации
         authListener = Auth.auth().addStateDidChangeListener { [weak self] auth, user in
             if let user = user {
                 self?.isLoggedIn = true
@@ -29,7 +28,6 @@ class AuthViewModel: ObservableObject {
     }
     
     deinit {
-        // Удаляем слушателя при уничтожении
         if let authListener = authListener {
             Auth.auth().removeStateDidChangeListener(authListener)
         }
@@ -46,8 +44,8 @@ class AuthViewModel: ObservableObject {
             let newUser = User(id: authUser.uid, name: name, email: email)
             self?.user = newUser
             self?.saveUserToFirestore(user: newUser)
-            self?.isLoggedIn = true // Устанавливаем состояние авторизации в true
-            completion() // Уведомляем о завершении регистрации
+            self?.isLoggedIn = true
+            completion()
         }
     }
     
@@ -59,8 +57,8 @@ class AuthViewModel: ObservableObject {
             }
             guard let authUser = authResult?.user else { return }
             self?.fetchUserFromFirestore(userId: authUser.uid)
-            self?.isLoggedIn = true // Устанавливаем состояние авторизации в true
-            completion() // Уведомляем о завершении входа
+            self?.isLoggedIn = true
+            completion()
         }
     }
     
@@ -87,7 +85,6 @@ class AuthViewModel: ObservableObject {
             }
             
             do {
-                // Декодируем документ и присваиваем ID из Firestore
                 var userData = try document.data(as: User.self)
                 userData.id = document.documentID
                 self?.user = userData
